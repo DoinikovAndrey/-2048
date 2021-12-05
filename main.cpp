@@ -11,10 +11,7 @@
 
 int main ()
 try {
-    ExWindow win(Graph_lib::Point{2,0}, 500, 500, "ok");
-    //win.wait_for_button();
-    //Rectangle r(Point{100,100}, 200, 50);
-    //win.attach(r);
+    ExWindow win(Point{2,0}, 500, 500, "ok");
     win.wait_for_button();
     return 0;
 } catch (std::exception& e) {
@@ -23,4 +20,4 @@ try {
 } catch (...) {
     std::cerr <<"Oops, something went wrong..."<< std::endl;
     return 2;
-}
+a

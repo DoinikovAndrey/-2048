@@ -10,8 +10,10 @@
 
 int main ()
 try {
-    ExWindow win(Graph_lib::Point{2,0}, 500, 500, "ok");
-    ButtonControl but(win, Graph_lib::Point{100, 100});
+    ExWindow win(Graph_lib::Point{2,0}, 700, 500, "ok");
+    Field field;
+    ButtonControl but(win, Graph_lib::Point{600, 300}, &field);
+    
     win.wait_for_button();
     return 0;
 } catch (std::exception& e) {

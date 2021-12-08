@@ -5,6 +5,7 @@ const std::string left = "→";
 const std::string down = "↓";
 const std::string right = "←";
 
+
 const std::string& get_str(DIRECT d){
     if (d == DIRECT::UP)
         return up;
@@ -18,14 +19,12 @@ const std::string& get_str(DIRECT d){
 
 
 ArrowButton::ArrowButton(Graph_lib::Point xy, int but_s, Graph_lib::Callback cb, DIRECT d)
-    : Button{xy, but_s, but_s, get_str(d), cb}, dir{d} {
-    
+    : Button{xy, but_s, but_s, get_str(d), cb}, dir{d} {    
 }
 
 void ArrowButton::attach(Graph_lib::Window& win){
     Button::attach(win);
 }
-
 
 
 ButtonControl::ButtonControl(Graph_lib::Window& win, Graph_lib::Point c, Field* f)

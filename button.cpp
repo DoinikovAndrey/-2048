@@ -1,4 +1,4 @@
-#include "button.h"
+#include "field.h"
 
 const std::string up = "↑";
 const std::string left = "→";
@@ -27,24 +27,20 @@ void ArrowButton::attach(Graph_lib::Window& win){
 }
 
 
-ButtonControl::ButtonControl(Graph_lib::Window& win, Graph_lib::Point c, Field* f)
+ButtonControl::ButtonControl(Field* f, Graph_lib::Point c, Graph_lib::Callback cb)
     : center{c}, field{f}{
 
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y-shift}, button_size, cb_clicked, DIRECT::UP});
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x+shift, c.y}, button_size, cb_clicked, DIRECT::LEFT});
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y+shift}, button_size, cb_clicked, DIRECT::DOWN});
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x-shift, c.y}, button_size, cb_clicked, DIRECT::RIGHT});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y-shift}, button_size, cb, DIRECT::UP});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x+shift, c.y}, button_size, cb, DIRECT::LEFT});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y+shift}, button_size, cb, DIRECT::DOWN});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x-shift, c.y}, button_size, cb, DIRECT::RIGHT});
     
     for (int i=0; i<but.size(); ++i)
-        win.attach(but[i]);
+        field->attach(but[i]);
 }
 
-void ButtonControl::clicked(Graph_lib::Address widget){
-    Fl_Widget& w = Graph_lib::reference_to<Fl_Widget>(widget);
-
-    ArrowButton& b = Graph_lib::reference_to<ArrowButton>(w.user_data());
-
-    field->move(b.get_dir());
+void ButtonControl::clicked(const ArrowButton& but){
+    field->move( but.get_dir() );
 
     Fl::redraw();
 }

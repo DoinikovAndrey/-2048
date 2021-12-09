@@ -1,7 +1,7 @@
 #include "field.h"
 
 
-Tile::Tile(int v, double len, Graph_lib::Point pos):
+Tile::Tile(int v, int len, Graph_lib::Point pos):
     value{v}, length{len}, position{pos}, value_label{Graph_lib::Point(pos.x+len/2,pos.y+len/2),std::to_string(v)},
     Graph_lib::Rectangle{pos, len, len}
 {
@@ -39,30 +39,29 @@ void Tile::move(int dx, int dy) {
 
 Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     tile_length{std::min(win_w / w,win_h / h)/1.3}, number_w{w}, number_h{h},
-    ExWindow{pos, win_w, win_h, "2048"}
+    ExWindow{pos, win_w, win_h, "2048"}, 
+    but_control{this, Graph_lib::Point{600,300}, cb_clicked}
 {
     field.resize(number_h);
     for (int i=0;i<h;i++)
-        for (int j=0;j<w;j++)
+        for (int j=0;j<w;j++){
             field[i].push_back(new Tile(0, tile_length, Graph_lib::Point{position.x+tile_length*i,position.y+tile_length*j}));
+            attach(field[i][j]);
+        }
     update();
 }
 
 void Field::add_random_tile(){
     int randx, randy;
+    int randv = 2;
+    if (rand() % 7 == 1) randv = 4;
+
     do {
         randx = rand() % number_w;
         randy = rand() % number_h;
-    } while (field[randy][randx].get_value() != 0);
-    field[randy][randx].set_value((rand() % 2 + 1) * 2);
-    update();
-}
+    } while ( field[randy][randx].get_value() );
 
-
-void Field::draw_lines() const {
-    for (int i=0;i<number_h;i++)
-        for (int j=0;j<number_w;j++)
-            field[i][j].draw_lines();
+    field[randy][randx].set_value(randv);
 }
 
 void Field::move(DIRECT d){
@@ -71,10 +70,10 @@ void Field::move(DIRECT d){
 }
 
 void Field::update(){
-    for (int i=0;i<number_h;i++)
-        for (int j=0;j<number_w;j++){
-            detach(field[i][j]);
-            attach(field[i][j]);
-        }
-    wait_for_button();
+    //for (int i=0;i<number_h;i++)
+    //    for (int j=0;j<number_w;j++){
+    //        detach(field[i][j]);
+    //        attach(field[i][j]);
+    //    }
+    Fl::redraw();
 }

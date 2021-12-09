@@ -5,7 +5,7 @@
 //#include "../Graph_lib/Graph.h"
 //#include "../Graph_lib/Simple_window.h"
 
-#include "button.h"
+#include "field.h"
 
 
 int main ()
@@ -13,12 +13,9 @@ try {
     srand(time(NULL));
 
     Field field(Graph_lib::Point{10,10},700,500);
-    //ButtonControl but(field, Graph_lib::Point{600, 300}, &field);
-    for (int i=0;i<16;i++)
-        field.add_random_tile();
-
-
+    
     field.wait_for_button();
+    
     return 0;
 } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;

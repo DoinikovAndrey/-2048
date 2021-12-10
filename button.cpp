@@ -1,9 +1,9 @@
 #include "field.h"
 
 const std::string up = "↑";
-const std::string left = "→";
+const std::string left = "←";
 const std::string down = "↓";
-const std::string right = "←";
+const std::string right = "→";
 
 
 const std::string& get_str(DIRECT d){
@@ -31,9 +31,9 @@ ButtonControl::ButtonControl(Field* f, Graph_lib::Point c, Graph_lib::Callback c
     : center{c}, field{f}{
 
     but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y-shift}, button_size, cb, DIRECT::UP});
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x+shift, c.y}, button_size, cb, DIRECT::LEFT});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x-shift, c.y}, button_size, cb, DIRECT::LEFT});
     but.push_back(new ArrowButton{Graph_lib::Point{c.x, c.y+shift}, button_size, cb, DIRECT::DOWN});
-    but.push_back(new ArrowButton{Graph_lib::Point{c.x-shift, c.y}, button_size, cb, DIRECT::RIGHT});
+    but.push_back(new ArrowButton{Graph_lib::Point{c.x+shift, c.y}, button_size, cb, DIRECT::RIGHT});
     
     for (int i=0; i<but.size(); ++i)
         field->attach(but[i]);

@@ -45,17 +45,22 @@ Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     field.resize(number_h);
     for (int i=0;i<h;i++)
         for (int j=0;j<w;j++){
-            field[i].push_back(new Tile(0, tile_length, Graph_lib::Point{position.x+tile_length*i,position.y+tile_length*j}));
+            field[i].push_back(new Tile(0, tile_length, Graph_lib::Point{position.x+tile_length*j,position.y+tile_length*i}));
             attach(field[i][j]);
         }
+    
+    for (int i=0; i<3; i++)
+        add_random_tile();
+
     update();
 }
 
 void Field::add_random_tile(){
-    int randx, randy;
     int randv = 2;
-    if (rand() % 7 == 1) randv = 4;
+    if (rand() % 7 == 1) 
+        randv = 4;
 
+    int randx, randy;
     do {
         randx = rand() % number_w;
         randy = rand() % number_h;
@@ -65,8 +70,143 @@ void Field::add_random_tile(){
 }
 
 void Field::move(DIRECT d){
-    add_random_tile();
-    update();
+    is_moved = false;
+    
+    if (d == DIRECT::UP)
+        move_up(), stick_up(), move_up();
+    else if (d == DIRECT::LEFT)
+        move_left(), stick_left(), move_left();
+    else if (d == DIRECT::DOWN)
+        move_down(), stick_down(), move_down();
+    else if (d == DIRECT::RIGHT)
+        move_right(), stick_right(), move_right();
+
+    if (is_moved){
+        add_random_tile();
+        update();
+    }
+}
+
+void Field::stick_up(){
+    for (int x = 0; x<number_w; ++x){
+        for (int y = 0; y<number_h-1; ++y){
+            if (field[y][x].get_value() == field[y+1][x].get_value()){
+                field[y][x].set_value(0);
+                field[y+1][x].mult_by_2();
+                is_moved = true;
+                ++y;
+            }
+        }
+    }
+}
+
+void Field::stick_left(){
+    for (int y = 0; y<number_h; ++y){
+        for (int x = number_w-1; x>0; --x){
+            if (field[y][x].get_value() == field[y][x-1].get_value()){
+                field[y][x].set_value(0);
+                field[y][x-1].mult_by_2();
+                is_moved = true;
+                --x;
+            }
+        }
+    }
+}
+
+void Field::stick_down(){
+    for (int x = 0; x<number_w; ++x){
+        for (int y = number_h-1; y>0; --y){
+            if (field[y][x].get_value() == field[y-1][x].get_value()){
+                field[y][x].set_value(0);
+                field[y-1][x].mult_by_2();
+                is_moved = true;
+                --y;
+            }
+        }
+    }
+}
+
+void Field::stick_right(){
+    for (int y = 0; y<number_h; ++y){
+        for (int x = 0; x<number_w-1; ++x){
+            if (field[y][x].get_value() == field[y][x+1].get_value()){
+                field[y][x].set_value(0);
+                field[y][x+1].mult_by_2();
+                is_moved = true;
+                ++x;
+            }
+        }
+    }
+}
+
+void Field::move_up(){
+    for (int x = 0; x<number_w; ++x){
+        int last = 0;
+        for (int y = 0; y<number_h; ++y){
+            if (field[y][x].get_value()){
+                if (last != y) {
+                    field[last][x].set_value( field[y][x].get_value() );
+                    field[y][x].set_value(0);
+
+                    is_moved = true;
+                }
+                last++;
+            }
+        }
+    }    
+    
+}
+
+void Field::move_left(){
+    for (int y = 0; y<number_h; ++y){
+        int last = 0;
+        for (int x = 0; x<number_w; ++x){
+            if (field[y][x].get_value()){
+                if (last != x) {
+                    field[y][last].set_value( field[y][x].get_value() );
+                    field[y][x].set_value(0);
+
+                    is_moved = true;
+                }
+                last++;
+            }
+        }
+    }    
+}
+
+void Field::move_down(){
+    for (int x = 0; x<number_w; ++x){
+        int last = number_h-1;
+        for (int y = number_h-1; y>=0; --y){
+            if (field[y][x].get_value()){
+                if (last != y) {
+                    field[last][x].set_value( field[y][x].get_value() );
+                    field[y][x].set_value(0);
+
+                    is_moved = true;
+                }
+                last--;
+            }
+        }
+    }    
+    
+}
+
+void Field::move_right(){
+    for (int y = 0; y<number_h; ++y){
+        int last = number_w-1;
+        for (int x = number_w-1; x>=0; --x){
+            if (field[y][x].get_value()){
+                if (last != x) {
+                    field[y][last].set_value( field[y][x].get_value() );
+                    field[y][x].set_value(0);
+
+                    is_moved = true;
+                }
+                last--;
+            }
+        }
+    }    
 }
 
 void Field::update(){

@@ -13,7 +13,7 @@ class Tile : public Graph_lib::Rectangle{
     public:
         Tile(int v, int len, Graph_lib::Point pos);
 
-        int get_value() {return value;}
+        int get_value() { return value; }
         void set_value(int new_v);
         void mult_by_2() { set_value(value*2); }
 
@@ -47,6 +47,16 @@ class Field : public ExWindow{
 
         void add_random_tile();
 
+        void stick_up();
+        void stick_left();
+        void stick_down();
+        void stick_right();
+
+        void move_up();
+        void move_left();
+        void move_down();
+        void move_right();
+
         static void cb_clicked(Graph_lib::Address, Graph_lib::Address but){
             Graph_lib::Window* win = Graph_lib::reference_to<Graph_lib::Button>(but).get_window();
             Graph_lib::reference_to<Field>(win).get_butcont().clicked(Graph_lib::reference_to<ArrowButton>(but));
@@ -62,6 +72,7 @@ class Field : public ExWindow{
 
         Graph_lib::Point position{50, 50};
 
+        bool is_moved{false};
 };
 
 #endif // FIELD_H

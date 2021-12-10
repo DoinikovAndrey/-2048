@@ -21,6 +21,6 @@ try {
     std::cerr << e.what() << std::endl;
     return 1;
 } catch (...) {
-    std::cerr <<"Oops, something went wrong..."<< std::endl;
+    std::cerr << "Oops, something went wrong..." << std::endl;
     return 2;
 }

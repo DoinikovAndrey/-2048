@@ -210,10 +210,5 @@ void Field::move_right(){
 }
 
 void Field::update(){
-    //for (int i=0;i<number_h;i++)
-    //    for (int j=0;j<number_w;j++){
-    //        detach(field[i][j]);
-    //        attach(field[i][j]);
-    //    }
     Fl::redraw();
 }

@@ -2,7 +2,7 @@
 #define BUTTON_H
 
 #include <string>
-#include "../Graph_lib/GUI.h"
+#include "Graph_lib/GUI.h"
 #include "window.h"
 
 

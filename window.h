@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../Graph_lib/Simple_window.h"
+#include "Graph_lib/Simple_window.h"
 
 struct ExWindow : Simple_window {
 

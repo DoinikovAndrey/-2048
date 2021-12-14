@@ -7,7 +7,6 @@
 
 #include "field.h"
 
-
 int main ()
 try {
     srand(time(NULL));

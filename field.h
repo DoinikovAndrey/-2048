@@ -1,7 +1,7 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include "../Graph_lib/Graph.h"
+#include "Graph_lib/Graph.h"
 #include "window.h"
 #include "button.h"
 #include <iostream>

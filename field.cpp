@@ -13,8 +13,11 @@ Tile::Tile(int v, int len, Graph_lib::Point pos):
 void Tile::set_value(int new_v) {
     value = new_v;
     value_label.set_label(std::to_string(value));
+    if (value && value < 128)
+        set_fill_color(fl_rgb_color(255 - (value * 2), 255, 255));
+    else
+        set_fill_color(fl_rgb_color(200, 200, 200));
 }
-
 
 void Tile::set_position(Graph_lib::Point new_pos) {
     Graph_lib::Rectangle::move(new_pos.x - position.x, new_pos.y - position.y);
@@ -37,10 +40,22 @@ void Tile::move(int dx, int dy) {
 
 
 
+Scoreboard::Scoreboard(Graph_lib::Point pos, std::string label)
+    : Graph_lib::Text {pos, label}{
+}
+
+void Scoreboard::update(int score){
+    label = "Score: " + std::to_string(score);
+    set_label(label);
+}
+
+
+
 Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     tile_length{std::min(win_w / w,win_h / h)/1.3}, number_w{w}, number_h{h},
     ExWindow{pos, win_w, win_h, "2048"}, 
-    but_control{this, Graph_lib::Point{600,300}, cb_clicked}
+    but_control{this, Graph_lib::Point{600,300}, cb_clicked},
+    scb{Graph_lib::Point{490, 40}, ("Score: " + std::to_string(0))}
 {
     field.resize(number_h);
     for (int i=0;i<h;i++)
@@ -51,7 +66,7 @@ Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     
     for (int i=0; i<3; i++)
         add_random_tile();
-
+    attach(scb);
     update();
 }
 
@@ -83,6 +98,7 @@ void Field::move(DIRECT d){
 
     if (is_moved){
         add_random_tile();
+        scb.update(score);
         update();
     }
 }
@@ -93,7 +109,9 @@ void Field::stick_up(){
             if (field[y][x].get_value() == field[y+1][x].get_value()){
                 field[y][x].set_value(0);
                 field[y+1][x].mult_by_2();
+                score += field[y+1][x].get_value();
                 is_moved = true;
+
                 ++y;
             }
         }
@@ -106,6 +124,7 @@ void Field::stick_left(){
             if (field[y][x].get_value() == field[y][x-1].get_value()){
                 field[y][x].set_value(0);
                 field[y][x-1].mult_by_2();
+                score += field[y][x-1].get_value();
                 is_moved = true;
                 --x;
             }
@@ -119,6 +138,7 @@ void Field::stick_down(){
             if (field[y][x].get_value() == field[y-1][x].get_value()){
                 field[y][x].set_value(0);
                 field[y-1][x].mult_by_2();
+                score += field[y-1][x].get_value();
                 is_moved = true;
                 --y;
             }
@@ -132,6 +152,7 @@ void Field::stick_right(){
             if (field[y][x].get_value() == field[y][x+1].get_value()){
                 field[y][x].set_value(0);
                 field[y][x+1].mult_by_2();
+                score += field[y][x+1].get_value();
                 is_moved = true;
                 ++x;
             }
@@ -147,7 +168,6 @@ void Field::move_up(){
                 if (last != y) {
                     field[last][x].set_value( field[y][x].get_value() );
                     field[y][x].set_value(0);
-
                     is_moved = true;
                 }
                 last++;
@@ -165,7 +185,6 @@ void Field::move_left(){
                 if (last != x) {
                     field[y][last].set_value( field[y][x].get_value() );
                     field[y][x].set_value(0);
-
                     is_moved = true;
                 }
                 last++;
@@ -182,7 +201,6 @@ void Field::move_down(){
                 if (last != y) {
                     field[last][x].set_value( field[y][x].get_value() );
                     field[y][x].set_value(0);
-
                     is_moved = true;
                 }
                 last--;
@@ -200,7 +218,6 @@ void Field::move_right(){
                 if (last != x) {
                     field[y][last].set_value( field[y][x].get_value() );
                     field[y][x].set_value(0);
-
                     is_moved = true;
                 }
                 last--;

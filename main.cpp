@@ -12,9 +12,8 @@ try {
     srand(time(NULL));
 
     Field field(Graph_lib::Point{10,10},700,500);
-    
     field.wait_for_button();
-    
+
     return 0;
 } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;

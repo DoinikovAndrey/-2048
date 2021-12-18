@@ -29,7 +29,16 @@ class Tile : public Graph_lib::Rectangle{
         Graph_lib::Point position;
 
         Graph_lib::Text value_label;
-        Graph_lib::Color tile_col = Graph_lib::Color::white;
+        Graph_lib::Color tile_col = fl_rgb_color(200, 200, 200);
+};
+
+struct Scoreboard : public Graph_lib::Text{
+    public:
+        Scoreboard(Graph_lib::Point pos, std::string label);
+        void update(int score);
+
+    private:
+        std::string label;
 };
 
 class Field : public ExWindow{
@@ -65,7 +74,9 @@ class Field : public ExWindow{
         std::vector< Graph_lib::Vector_ref<Tile> > field;
 
         ButtonControl but_control;
+        Scoreboard scb;
 
+        int score = 0;
         int tile_length;
         int number_w; //number of cells by weidth
         int number_h; //number of cells by height

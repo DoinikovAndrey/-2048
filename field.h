@@ -76,11 +76,11 @@ class Field : public ExWindow{
         int tile_length;
         int number_w; //number of cells by weidth
         int number_h; //number of cells by height
-        bool game_over;
 
         Graph_lib::Point position{50, 50};
 
         bool is_moved{false};
+        bool game_over{false};
 };
 
 #endif // FIELD_H

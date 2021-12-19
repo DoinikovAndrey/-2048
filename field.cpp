@@ -78,6 +78,8 @@ void Field::add_random_tile(){
 }
 
 void Field::move(DIRECT d){
+    if (game_over)
+        return;
     is_moved = false;
     
     if (d == DIRECT::UP)
@@ -99,12 +101,14 @@ void Field::move(DIRECT d){
 void Field::stick_up(){
     for (int x = 0; x<number_w; ++x){
         for (int y = 0; y<number_h-1; ++y){
+            if (field[y][x].get_value() == 0) 
+                continue;
+
             if (field[y][x].get_value() == field[y+1][x].get_value()){
                 field[y][x].set_value(0);
                 field[y+1][x].mult_by_2();
                 score += field[y+1][x].get_value();
                 is_moved = true;
-
                 ++y;
             }
         }
@@ -113,13 +117,16 @@ void Field::stick_up(){
 
 void Field::stick_left(){
     for (int y = 0; y<number_h; ++y){
-        for (int x = number_w-1; x>0; --x){
+        for (int x = 1; x<number_w; ++x){
+            if (field[y][x].get_value() == 0) 
+                continue;
+
             if (field[y][x].get_value() == field[y][x-1].get_value()){
                 field[y][x].set_value(0);
                 field[y][x-1].mult_by_2();
                 score += field[y][x-1].get_value();
                 is_moved = true;
-                --x;
+                ++x;
             }
         }
     }
@@ -128,6 +135,9 @@ void Field::stick_left(){
 void Field::stick_down(){
     for (int x = 0; x<number_w; ++x){
         for (int y = number_h-1; y>0; --y){
+            if (field[y][x].get_value() == 0) 
+                continue;
+
             if (field[y][x].get_value() == field[y-1][x].get_value()){
                 field[y][x].set_value(0);
                 field[y-1][x].mult_by_2();
@@ -141,13 +151,16 @@ void Field::stick_down(){
 
 void Field::stick_right(){
     for (int y = 0; y<number_h; ++y){
-        for (int x = 0; x<number_w-1; ++x){
+        for (int x = number_w-2; x>=0; --x){
+            if (field[y][x].get_value() == 0) 
+                continue;
+
             if (field[y][x].get_value() == field[y][x+1].get_value()){
                 field[y][x].set_value(0);
                 field[y][x+1].mult_by_2();
                 score += field[y][x+1].get_value();
                 is_moved = true;
-                ++x;
+                --x;
             }
         }
     }

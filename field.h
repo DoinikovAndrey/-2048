@@ -4,6 +4,7 @@
 #include "Graph_lib/Graph.h"
 #include "window.h"
 #include "button.h"
+#include "scoreboard.h"
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
@@ -32,14 +33,6 @@ class Tile : public Graph_lib::Rectangle{
         Graph_lib::Color tile_col = fl_rgb_color(200, 200, 200);
 };
 
-struct Scoreboard : public Graph_lib::Text{
-    public:
-        Scoreboard(Graph_lib::Point pos, std::string label);
-        void update(int score);
-
-    private:
-        std::string label;
-};
 
 class Field : public ExWindow{
     public:
@@ -66,6 +59,8 @@ class Field : public ExWindow{
         void move_down();
         void move_right();
 
+        bool is_end();
+
         static void cb_clicked(Graph_lib::Address, Graph_lib::Address but){
             Graph_lib::Window* win = Graph_lib::reference_to<Graph_lib::Button>(but).get_window();
             Graph_lib::reference_to<Field>(win).get_butcont().clicked(Graph_lib::reference_to<ArrowButton>(but));
@@ -75,11 +70,13 @@ class Field : public ExWindow{
 
         ButtonControl but_control;
         Scoreboard scb;
+        Graph_lib::Text is_over;
 
         int score = 0;
         int tile_length;
         int number_w; //number of cells by weidth
         int number_h; //number of cells by height
+        bool game_over;
 
         Graph_lib::Point position{50, 50};
 

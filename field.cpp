@@ -15,6 +15,8 @@ void Tile::set_value(int new_v) {
     value_label.set_label(std::to_string(value));
     if (value && value < 128)
         set_fill_color(fl_rgb_color(255 - (value * 2), 255, 255));
+    else if (value >= 128)
+                set_fill_color(fl_rgb_color(255, 0, 255));
     else
         set_fill_color(fl_rgb_color(200, 200, 200));
 }
@@ -40,22 +42,12 @@ void Tile::move(int dx, int dy) {
 
 
 
-Scoreboard::Scoreboard(Graph_lib::Point pos, std::string label)
-    : Graph_lib::Text {pos, label}{
-}
-
-void Scoreboard::update(int score){
-    label = "Score: " + std::to_string(score);
-    set_label(label);
-}
-
-
-
 Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     tile_length{std::min(win_w / w,win_h / h)/1.3}, number_w{w}, number_h{h},
     ExWindow{pos, win_w, win_h, "2048"}, 
     but_control{this, Graph_lib::Point{600,300}, cb_clicked},
-    scb{Graph_lib::Point{490, 40}, ("Score: " + std::to_string(0))}
+    scb{Graph_lib::Point{490, 40}, ("Score: " + std::to_string(0))},
+    is_over{Graph_lib::Point{490, 100}, ""}
 {
     field.resize(number_h);
     for (int i=0;i<h;i++)
@@ -67,6 +59,7 @@ Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     for (int i=0; i<3; i++)
         add_random_tile();
     attach(scb);
+    attach(is_over);
     update();
 }
 
@@ -226,6 +219,28 @@ void Field::move_right(){
     }    
 }
 
+bool Field::is_end(){ // Проверяет наличие одинаковых клеток в поле
+    for (int i = 0; i < number_h; ++i) {
+        for (int j = 0; j < number_w - 1; ++j) {
+            if (field[i][j].get_value() == field[i][j + 1].get_value()
+                    || field[i][j].get_value() == 0 || field[i][j + 1].get_value() == 0)
+                return false;
+        }
+    }
+
+    for (int i = 0; i < number_h - 1; ++i) {
+        for (int j = 0; j < number_w; ++j) {
+            if (field[i][j].get_value() == field[i + 1][j].get_value()
+                    || field[i][j].get_value() == 0 || field[i + 1][j].get_value() == 0)
+                return false;
+        }
+    }
+    return true;
+}
+
 void Field::update(){
+    game_over = is_end();
+    if (game_over)
+        is_over.set_label("Game Over");
     Fl::redraw();
 }

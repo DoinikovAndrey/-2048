@@ -33,5 +33,6 @@
 
 *.qbs
 *.qbs.user
+*.zip
 
 fff/fgh.txt

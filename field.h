@@ -59,6 +59,8 @@ class Field : public ExWindow{
         void move_down();
         void move_right();
 
+        std::string help_message() override { return "Game 2048";}
+
         bool is_end();
 
         static void cb_clicked(Graph_lib::Address, Graph_lib::Address but){
@@ -78,6 +80,7 @@ class Field : public ExWindow{
         int number_h; //number of cells by height
 
         Graph_lib::Point position{50, 50};
+        Graph_lib::Text helpt;
 
         bool is_moved{false};
         bool game_over{false};

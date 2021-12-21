@@ -47,8 +47,10 @@ Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
     ExWindow{pos, win_w, win_h, "2048"}, 
     but_control{this, Graph_lib::Point{600,300}, cb_clicked},
     scb{Graph_lib::Point{490, 40}, ("Score: " + std::to_string(0))},
-    is_over{Graph_lib::Point{490, 100}, ""}
+    is_over{Graph_lib::Point{490, 100}, ""}, helpt{Graph_lib::Point(20, 20), ""}
 {
+    help_msg = "Game 2048 (описание игры)";
+
     field.resize(number_h);
     for (int i=0;i<h;i++)
         for (int j=0;j<w;j++){
@@ -60,8 +62,14 @@ Field::Field(Graph_lib::Point pos, int win_w, int win_h, int w, int h):
         add_random_tile();
     attach(scb);
     attach(is_over);
+    attach(helpt);
     update();
 }
+
+
+
+
+
 
 void Field::add_random_tile(){
     int randv = 2;
@@ -250,6 +258,7 @@ bool Field::is_end(){ // Проверяет наличие одинаковых 
     }
     return true;
 }
+
 
 void Field::update(){
     game_over = is_end();
